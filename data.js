@@ -1332,8 +1332,8 @@ const INITIAL_DATA = [
     "name": "Gießen",
     "bundesland": "Hessen",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "166",
@@ -1380,8 +1380,8 @@ const INITIAL_DATA = [
     "name": "Lahn-Dill-Kreis",
     "bundesland": "Hessen",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "178",
@@ -1412,8 +1412,8 @@ const INITIAL_DATA = [
     "name": "Marburg-Biedenkopf",
     "bundesland": "Hessen",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "170",
@@ -1460,8 +1460,8 @@ const INITIAL_DATA = [
     "name": "Vogelsbergkreis",
     "bundesland": "Hessen",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "186",
@@ -1484,8 +1484,8 @@ const INITIAL_DATA = [
     "name": "Wetteraukreis",
     "bundesland": "Hessen",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "175",
@@ -2356,8 +2356,8 @@ const INITIAL_DATA = [
     "name": "Rheinisch-Bergischer Kreis",
     "bundesland": "Nordrhein-Westfalen",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "260",
