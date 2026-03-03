@@ -1684,8 +1684,8 @@ const INITIAL_DATA = [
     "name": "Cuxhaven",
     "bundesland": "Niedersachsen",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Mobile Retter",
+    "farbe": "#e63946"
   },
   {
     "ags": "217",
@@ -1876,8 +1876,8 @@ const INITIAL_DATA = [
     "name": "Osterholz",
     "bundesland": "Niedersachsen",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Mobile Retter",
+    "farbe": "#e63946"
   },
   {
     "ags": "212",
@@ -1964,8 +1964,8 @@ const INITIAL_DATA = [
     "name": "Wesermarsch",
     "bundesland": "Niedersachsen",
     "typ": "Landkreise",
-    "anbieter": "Corhelper",
-    "farbe": "#22c55e"
+    "anbieter": "Mobile Retter",
+    "farbe": "#e63946"
   },
   {
     "ags": "249",
