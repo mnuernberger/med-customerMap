@@ -12,8 +12,8 @@ const INITIAL_DATA = [
     "name": "Baden-Baden Städte",
     "bundesland": "Baden-Württemberg",
     "typ": "Kreisfreie Städte",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Region der Lebensretter",
+    "farbe": "#8b5cf6"
   },
   {
     "ags": "37",
@@ -28,16 +28,16 @@ const INITIAL_DATA = [
     "name": "Bodensee",
     "bundesland": "Baden-Württemberg",
     "typ": "Landkreise",
-    "anbieter": "Region der Lebensretter",
-    "farbe": "#8b5cf6"
+    "anbieter": "Corhelper",
+    "farbe": "#22c55e"
   },
   {
     "ags": "1",
     "name": "Breisgau-Hochschwarzwald",
     "bundesland": "Baden-Württemberg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Region der Lebensretter",
+    "farbe": "#8b5cf6"
   },
   {
     "ags": "23",
@@ -68,8 +68,8 @@ const INITIAL_DATA = [
     "name": "Enz",
     "bundesland": "Baden-Württemberg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Region der Lebensretter",
+    "farbe": "#8b5cf6"
   },
   {
     "ags": "24",
@@ -148,16 +148,16 @@ const INITIAL_DATA = [
     "name": "Karlsruhe",
     "bundesland": "Baden-Württemberg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Region der Lebensretter",
+    "farbe": "#8b5cf6"
   },
   {
     "ags": "16",
     "name": "Karlsruhe Städte",
     "bundesland": "Baden-Württemberg",
     "typ": "Kreisfreie Städte",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Region der Lebensretter",
+    "farbe": "#8b5cf6"
   },
   {
     "ags": "4",
@@ -180,8 +180,8 @@ const INITIAL_DATA = [
     "name": "Lörrach",
     "bundesland": "Baden-Württemberg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Region der Lebensretter",
+    "farbe": "#8b5cf6"
   },
   {
     "ags": "31",
@@ -228,24 +228,24 @@ const INITIAL_DATA = [
     "name": "Pforzheim Städte",
     "bundesland": "Baden-Württemberg",
     "typ": "Kreisfreie Städte",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Region der Lebensretter",
+    "farbe": "#8b5cf6"
   },
   {
     "ags": "21",
     "name": "Rastatt",
     "bundesland": "Baden-Württemberg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Region der Lebensretter",
+    "farbe": "#8b5cf6"
   },
   {
     "ags": "39",
     "name": "Ravensburg",
     "bundesland": "Baden-Württemberg",
     "typ": "Landkreise",
-    "anbieter": "Region der Lebensretter",
-    "farbe": "#8b5cf6"
+    "anbieter": "Corhelper",
+    "farbe": "#22c55e"
   },
   {
     "ags": "33",
@@ -300,8 +300,8 @@ const INITIAL_DATA = [
     "name": "Sigmaringen",
     "bundesland": "Baden-Württemberg",
     "typ": "Landkreise",
-    "anbieter": "Region der Lebensretter",
-    "farbe": "#8b5cf6"
+    "anbieter": "Corhelper",
+    "farbe": "#22c55e"
   },
   {
     "ags": "35",
@@ -340,8 +340,8 @@ const INITIAL_DATA = [
     "name": "Waldshut",
     "bundesland": "Baden-Württemberg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Region der Lebensretter",
+    "farbe": "#8b5cf6"
   },
   {
     "ags": "44",
