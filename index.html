@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Deutschland Vertriebskarte</title>
+  <title>Marktlage SbEA</title>
 
   <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -104,54 +104,6 @@
     .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); width: 100%; justify-content: center; }
     .btn-secondary:hover { background: var(--border); }
 
-
-    /* ===== Suchfeld ===== */
-    .search-wrap {
-      position: relative;
-    }
-
-    .search-wrap svg {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      pointer-events: none;
-    }
-
-    #search-input {
-      width: 100%;
-      padding: 9px 12px 9px 34px;
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      font-size: 13px;
-      outline: none;
-      transition: border-color .2s;
-      background: var(--bg);
-    }
-
-    #search-input:focus { border-color: var(--accent); background: #fff; }
-
-    #search-results {
-      margin-top: 6px;
-      max-height: 160px;
-      overflow-y: auto;
-      border-radius: 7px;
-      border: 1px solid var(--border);
-      display: none;
-    }
-
-    .search-result-item {
-      padding: 8px 12px;
-      font-size: 13px;
-      cursor: pointer;
-      border-bottom: 1px solid var(--border);
-      transition: background .15s;
-    }
-
-    .search-result-item:last-child { border-bottom: none; }
-    .search-result-item:hover { background: #eff6ff; }
-    .search-result-item .ags-badge { font-size: 11px; color: var(--text-muted); margin-left: 6px; }
 
     /* ===== Statistiken ===== */
     #stats-list { list-style: none; }
@@ -301,25 +253,7 @@
   <aside id="sidebar">
 
     <div class="sidebar-header">
-      <h1>🗺 Vertriebskarte Deutschland</h1>
-      <p>B2B-SaaS Anbieter nach Region</p>
-    </div>
-
-    <!-- Suche -->
-    <div class="sidebar-section">
-      <div class="sidebar-section-title">Suche</div>
-      <div class="search-wrap">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <input
-          type="text"
-          id="search-input"
-          placeholder="Gemeinde oder AGS suchen…"
-          autocomplete="off"
-        />
-      </div>
-      <div id="search-results"></div>
+      <h1>Marktlage SbEA</h1>
     </div>
 
     <!-- Statistiken -->
@@ -653,71 +587,6 @@ function updateStats() {
 }
 
 // ============================================================
-// SUCHE
-// ============================================================
-function searchGemeinde(query) {
-  const resultsDiv = document.getElementById('search-results');
-
-  if (!query.trim() || !geoData) {
-    resultsDiv.style.display = 'none';
-    return;
-  }
-
-  const q = query.trim().toLowerCase();
-  const matches = [];
-
-  geoData.features.forEach(feature => {
-    const p = feature.properties;
-    const name = (p.GEN || p.name || p.NAME || '').toLowerCase();
-    const ags = getAGS(feature);
-
-    if (name.includes(q) || ags.includes(q)) {
-      matches.push({ feature, name: p.NAME_3 || p.GEN || p.name || p.NAME || ags, ags });
-    }
-  });
-
-  if (!matches.length) {
-    resultsDiv.style.display = 'block';
-    resultsDiv.innerHTML = '<div class="search-result-item" style="color:var(--text-muted)">Keine Treffer gefunden.</div>';
-    return;
-  }
-
-  // Maximal 8 Ergebnisse anzeigen
-  const displayed = matches.slice(0, 8);
-  resultsDiv.style.display = 'block';
-  resultsDiv.innerHTML = displayed.map(({ feature, name, ags }) => `
-    <div class="search-result-item" data-ags="${ags}">
-      ${name}<span class="ags-badge">${ags}</span>
-    </div>
-  `).join('');
-
-  // Klick-Handler
-  resultsDiv.querySelectorAll('.search-result-item').forEach(el => {
-    el.addEventListener('click', () => {
-      const targetAGS = el.dataset.ags;
-      zoomToFeature(targetAGS);
-      resultsDiv.style.display = 'none';
-      document.getElementById('search-input').value = el.firstChild.textContent.trim();
-    });
-  });
-}
-
-// ============================================================
-// ZOOM AUF FEATURE
-// ============================================================
-function zoomToFeature(ags) {
-  if (!geoLayer) return;
-
-  geoLayer.eachLayer(layer => {
-    if (getAGS(layer.feature) === ags) {
-      const bounds = layer.getBounds();
-      map.fitBounds(bounds, { padding: [40, 40] });
-      layer.openPopup();
-    }
-  });
-}
-
-// ============================================================
 // PNG EXPORT
 // ============================================================
 function exportPNG() {
@@ -735,18 +604,6 @@ function exportPNG() {
 // ============================================================
 // EVENT LISTENER
 // ============================================================
-
-// Suche
-document.getElementById('search-input').addEventListener('input', e => {
-  searchGemeinde(e.target.value);
-});
-
-// Suche schließen bei Klick außerhalb
-document.addEventListener('click', e => {
-  if (!e.target.closest('#search-input') && !e.target.closest('#search-results')) {
-    document.getElementById('search-results').style.display = 'none';
-  }
-});
 
 // Export
 document.getElementById('btn-export').addEventListener('click', exportPNG);
