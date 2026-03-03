@@ -1396,16 +1396,16 @@ const INITIAL_DATA = [
     "name": "Main-Kinzig-Kreis",
     "bundesland": "Hessen",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Corhelper",
+    "farbe": "#22c55e"
   },
   {
     "ags": "169",
     "name": "Main-Taunus-Kreis Städte",
     "bundesland": "Hessen",
     "typ": "Kreisfreie Städte",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Region der Lebensretter",
+    "farbe": "#8b5cf6"
   },
   {
     "ags": "179",
