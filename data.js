@@ -3180,120 +3180,120 @@ const INITIAL_DATA = [
     "name": "Dithmarschen",
     "bundesland": "Schleswig-Holstein",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "399",
     "name": "Flensburg Städte",
     "bundesland": "Schleswig-Holstein",
     "typ": "Kreisfreie Städte",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "400",
     "name": "Kiel Städte",
     "bundesland": "Schleswig-Holstein",
     "typ": "Kreisfreie Städte",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "401",
     "name": "Lauenburg",
     "bundesland": "Schleswig-Holstein",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "402",
     "name": "Lübeck Städte",
     "bundesland": "Schleswig-Holstein",
     "typ": "Kreisfreie Städte",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "403",
     "name": "Neumünster Städte",
     "bundesland": "Schleswig-Holstein",
     "typ": "Kreisfreie Städte",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "404",
     "name": "Nordfriesland",
     "bundesland": "Schleswig-Holstein",
     "typ": "Landkreise",
-    "anbieter": "Katretter",
-    "farbe": "#f97316"
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "405",
     "name": "Ostholstein",
     "bundesland": "Schleswig-Holstein",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "406",
     "name": "Pinneberg",
     "bundesland": "Schleswig-Holstein",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "407",
     "name": "Plön",
     "bundesland": "Schleswig-Holstein",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "408",
     "name": "Rendsburg-Eckernförde",
     "bundesland": "Schleswig-Holstein",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "409",
     "name": "Schleswig-Flensburg",
     "bundesland": "Schleswig-Holstein",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "410",
     "name": "Segeberg",
     "bundesland": "Schleswig-Holstein",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "411",
     "name": "Steinburg",
     "bundesland": "Schleswig-Holstein",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "412",
     "name": "Stormarn",
     "bundesland": "Schleswig-Holstein",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "ASB SCHOCKT",
+    "farbe": "#eab308"
   },
   {
     "ags": "413",
