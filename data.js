@@ -1156,8 +1156,8 @@ const INITIAL_DATA = [
     "name": "Dahme-Spreewald",
     "bundesland": "Brandenburg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "146",
@@ -1180,24 +1180,24 @@ const INITIAL_DATA = [
     "name": "Havelland",
     "bundesland": "Brandenburg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "149",
     "name": "Märkisch-Oderland",
     "bundesland": "Brandenburg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "150",
     "name": "Oberhavel",
     "bundesland": "Brandenburg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "151",
@@ -1212,16 +1212,16 @@ const INITIAL_DATA = [
     "name": "Oder-Spree",
     "bundesland": "Brandenburg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "153",
     "name": "Ostprignitz-Ruppin",
     "bundesland": "Brandenburg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "155",
@@ -1236,16 +1236,16 @@ const INITIAL_DATA = [
     "name": "Potsdam-Mittelmark",
     "bundesland": "Brandenburg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "156",
     "name": "Prignitz",
     "bundesland": "Brandenburg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "157",
@@ -1260,16 +1260,16 @@ const INITIAL_DATA = [
     "name": "Teltow-Fläming",
     "bundesland": "Brandenburg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "159",
     "name": "Uckermark",
     "bundesland": "Brandenburg",
     "typ": "Landkreise",
-    "anbieter": "",
-    "farbe": ""
+    "anbieter": "Katretter",
+    "farbe": "#f97316"
   },
   {
     "ags": "160",
