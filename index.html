@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deutschland Vertriebskarte</title>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Vorbelegte Kreisdaten (434 Kreise, editierbar in data.js) -->
+  <script src="data.js"></script>
+
+  <!-- html2canvas für PNG-Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    /* ===== Reset & Basis ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar-width: 320px;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --radius: 10px;
+      --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
+      --no-provider-color: #cccccc;
+    }
+
+    html, body { height: 100%; overflow: hidden; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); }
+
+    /* ===== Layout ===== */
+    #app { display: flex; height: 100vh; }
+
+    /* ===== Sidebar ===== */
+    #sidebar {
+      width: var(--sidebar-width);
+      min-width: var(--sidebar-width);
+      height: 100%;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 2px 0 8px rgba(0,0,0,.05);
+    }
+
+    .sidebar-header {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: #fff;
+    }
+
+    .sidebar-header h1 {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+    }
+
+    .sidebar-header p {
+      font-size: 12px;
+      opacity: .8;
+      margin-top: 4px;
+    }
+
+    .sidebar-section {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: background .15s, transform .1s;
+    }
+
+    .btn:active { transform: scale(.97); }
+
+    .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); width: 100%; justify-content: center; }
+    .btn-secondary:hover { background: var(--border); }
+
+
+    /* ===== Suchfeld ===== */
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    #search-input {
+      width: 100%;
+      padding: 9px 12px 9px 34px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-size: 13px;
+      outline: none;
+      transition: border-color .2s;
+      background: var(--bg);
+    }
+
+    #search-input:focus { border-color: var(--accent); background: #fff; }
+
+    #search-results {
+      margin-top: 6px;
+      max-height: 160px;
+      overflow-y: auto;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .search-result-item {
+      padding: 8px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+
+    .search-result-item:last-child { border-bottom: none; }
+    .search-result-item:hover { background: #eff6ff; }
+    .search-result-item .ags-badge { font-size: 11px; color: var(--text-muted); margin-left: 6px; }
+
+    /* ===== Statistiken ===== */
+    #stats-list { list-style: none; }
+
+    #stats-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 0;
+      font-size: 13px;
+    }
+
+    .stat-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .stat-count {
+      margin-left: auto;
+      font-weight: 600;
+      font-size: 12px;
+      background: var(--bg);
+      padding: 1px 7px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    /* ===== Karten-Container ===== */
+    #map-container {
+      flex: 1;
+      position: relative;
+      background: #ffffff;
+    }
+
+    #map { width: 100%; height: 100%; }
+
+    /* ===== Lade-Spinner ===== */
+    #spinner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(248,250,252,.85);
+      z-index: 500;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .spinner-ring {
+      width: 40px; height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== Leaflet Legende ===== */
+    .map-legend {
+      background: white;
+      border-radius: 8px;
+      padding: 10px 14px;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      max-width: 200px;
+    }
+
+    .map-legend h4 {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 3px 0;
+    }
+
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      flex-shrink: 0;
+      border: 1px solid rgba(0,0,0,.1);
+    }
+
+    /* ===== Tooltip Styling ===== */
+    .leaflet-tooltip-custom {
+      background: #1e293b;
+      color: #f8fafc;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+      pointer-events: none;
+    }
+    .leaflet-tooltip-custom::before {
+      border-top-color: #1e293b;
+    }
+
+    /* ===== Popup Styling ===== */
+    .popup-content { font-size: 13px; min-width: 160px; }
+    .popup-content h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .popup-row { display: flex; justify-content: space-between; gap: 12px; padding: 2px 0; }
+    .popup-label { color: #64748b; }
+    .popup-value { font-weight: 600; }
+    .popup-color-swatch {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,.15);
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    /* ===== Responsiv: Sidebar oben auf kleinen Screens ===== */
+    @media (max-width: 768px) {
+      #app { flex-direction: column; }
+      #sidebar {
+        width: 100%;
+        min-width: unset;
+        height: auto;
+        max-height: 50vh;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      #map-container { flex: 1; min-height: 50vh; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside id="sidebar">
+
+    <div class="sidebar-header">
+      <h1>🗺 Vertriebskarte Deutschland</h1>
+      <p>B2B-SaaS Anbieter nach Region</p>
+    </div>
+
+    <!-- Suche -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Suche</div>
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Gemeinde oder AGS suchen…"
+          autocomplete="off"
+        />
+      </div>
+      <div id="search-results"></div>
+    </div>
+
+    <!-- Statistiken -->
+    <div class="sidebar-section" style="flex:1;">
+      <div class="sidebar-section-title">Anbieter-Übersicht</div>
+      <ul id="stats-list">
+        <li style="color:var(--text-muted);font-size:13px;">Noch keine Daten geladen.</li>
+      </ul>
+    </div>
+
+    <!-- Export -->
+    <div class="sidebar-section">
+      <button class="btn btn-secondary" id="btn-export">
+        🖼 Als PNG exportieren
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- ===== KARTE ===== -->
+  <div id="map-container">
+    <div id="spinner">
+      <div class="spinner-ring"></div>
+      <span>Kartendaten werden geladen…</span>
+    </div>
+    <div id="map"></div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// KONFIGURATION
+// ============================================================
+
+/**
+ * GeoJSON-URL für deutsche Kreise (mittlere Auflösung).
+ * Kreisebene (AGS = Landkreisschlüssel, 5-stellig).
+ *
+ * Auf Gemeindeebene wechseln:
+ *   → https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bundeslaender/4_niedrig.geo.json
+ *     gibt Bundesländer – für echte Gemeindeebene braucht man den BKG-Datensatz
+ *     (z. B. vg250-Shapefiles) der ~50 MB groß ist und einen eigenen Server benötigt.
+ *   → Empfehlung: Für Produktiveinsatz OpenDataSoft-API oder eigenen Tile-Server nutzen.
+ */
+const GEOJSON_URL = 'https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/4_kreise/3_mittel.geo.json';
+
+// Farbe für Kreise ohne Anbieter-Zuordnung
+const DEFAULT_COLOR = '#cccccc';
+
+// ============================================================
+// GLOBALER ZUSTAND
+// ============================================================
+let map;               // Leaflet-Kartenobjekt
+let geoLayer;          // GeoJSON-Layer auf der Karte
+let geoData;           // Geladene GeoJSON-Rohdaten
+let providerMap = {};  // { ags: { name, anbieter, farbe } }
+let colorByProvider = {}; // { anbieterName: farbe }
+let legendControl;     // Leaflet-Legendenkontrolle
+
+// ============================================================
+// KARTE INITIALISIEREN
+// ============================================================
+function initMap() {
+  map = L.map('map', {
+    center: [51.1657, 10.4515],
+    zoom: 6,
+    zoomControl: true,
+  });
+
+  // Keine Basiskarte – nur die Kreis-Polygone auf weißem Hintergrund.
+  // So sind keine ausländischen Ortsnamen oder Gebiete sichtbar.
+}
+
+
+// ============================================================
+// GEOJSON LADEN
+// ============================================================
+async function loadGeoJSON() {
+  try {
+    const response = await fetch(GEOJSON_URL);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    geoData = await response.json();
+
+    // GeoJSON-Layer rendern
+    renderGeoLayer();
+
+    // Vorbelegte Daten aus data.js automatisch laden (falls vorhanden)
+    if (typeof INITIAL_DATA !== 'undefined' && INITIAL_DATA.length) {
+      buildProviderMap(INITIAL_DATA);
+      colorizeMap();
+      buildLegend();
+      updateStats();
+    }
+
+    // Spinner ausblenden
+    document.getElementById('spinner').style.display = 'none';
+  } catch (err) {
+    document.getElementById('spinner').innerHTML =
+      `<div style="color:#dc2626;text-align:center;padding:20px;">
+        ❌ GeoJSON konnte nicht geladen werden.<br>
+        <small style="color:#64748b">${err.message}</small>
+      </div>`;
+    console.error('GeoJSON-Ladefehler:', err);
+  }
+}
+
+// ============================================================
+// GEOJSON-LAYER RENDERN / AKTUALISIEREN
+// ============================================================
+function renderGeoLayer() {
+  // Alten Layer entfernen falls vorhanden
+  if (geoLayer) map.removeLayer(geoLayer);
+
+  geoLayer = L.geoJSON(geoData, {
+    style: styleFeature,
+    onEachFeature: onEachFeature,
+  }).addTo(map);
+
+  // Karte auf Deutschland zentrieren
+  map.fitBounds(geoLayer.getBounds(), { padding: [10, 10] });
+}
+
+// ============================================================
+// FARB-LOGIK: Feature einfärben
+// ============================================================
+function styleFeature(feature) {
+  const ags = getAGS(feature);
+  const entry = providerMap[ags];
+  const fillColor = entry ? entry.farbe : DEFAULT_COLOR;
+
+  return {
+    fillColor,
+    fillOpacity: 0.75,
+    color: '#ffffff',
+    weight: 0.8,
+    opacity: 1,
+  };
+}
+
+/**
+ * Eindeutige ID aus GeoJSON-Properties extrahieren.
+ * Der isellsoap/deutschlandGeoJSON-Datensatz verwendet 'ID_3' als eindeutigen Schlüssel.
+ */
+function getAGS(feature) {
+  const p = feature.properties;
+  return String(p.ID_3 || p.RS || p.AGS || p.ags || p.id || '');
+}
+
+// ============================================================
+// HOVER & KLICK-VERHALTEN
+// ============================================================
+function onEachFeature(feature, layer) {
+  const ags = getAGS(feature);
+  const p = feature.properties;
+  const name = p.NAME_3 || p.GEN || p.name || p.NAME || 'Unbekannt';
+  // Tooltip (Hover) – entry wird bei jedem Hover neu aus providerMap gelesen,
+  // damit er nach einem Excel-Upload korrekte Daten zeigt.
+  layer.bindTooltip(() => {
+    const currentEntry = providerMap[ags];
+    const anbieterLine = currentEntry
+      ? `<div style="color:#64748b;font-size:11px;margin-top:2px">${currentEntry.anbieter}</div>`
+      : '';
+    return `<div style="font-size:13px;font-weight:600;line-height:1.3">${name}</div>${anbieterLine}`;
+  }, { sticky: true, opacity: 1, className: 'leaflet-tooltip-custom' });
+
+  // Popup (Klick) – ebenfalls live-lookup
+  layer.bindPopup(() => {
+    const currentEntry = providerMap[ags];
+    return buildPopup(name, ags, currentEntry);
+  });
+
+  // Hover-Effekt: Aufhellen
+  layer.on({
+    mouseover(e) {
+      e.target.setStyle({ fillOpacity: 0.95, weight: 2, color: '#1e293b' });
+      e.target.bringToFront();
+    },
+    mouseout(e) {
+      geoLayer.resetStyle(e.target);
+    },
+  });
+}
+
+// ============================================================
+// POPUP HTML AUFBAUEN
+// ============================================================
+function buildPopup(name, ags, entry) {
+  const anbieter = entry ? entry.anbieter : 'Kein Anbieter';
+  const farbe = entry ? entry.farbe : DEFAULT_COLOR;
+  const swatch = `<span class="popup-color-swatch" style="background:${farbe}"></span>`;
+
+  return `
+    <div class="popup-content">
+      <h3>${name}</h3>
+      <div class="popup-row">
+        <span class="popup-label">AGS</span>
+        <span class="popup-value">${ags}</span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-label">Anbieter</span>
+        <span class="popup-value">${swatch}${anbieter}</span>
+      </div>
+      ${entry ? `<div class="popup-row"><span class="popup-label">Farbe</span><span class="popup-value">${farbe}</span></div>` : ''}
+    </div>`;
+}
+
+// ============================================================
+// ANBIETER-MAP AUFBAUEN
+// ============================================================
+function buildProviderMap(rows) {
+  providerMap = {};
+  colorByProvider = {};
+
+  rows.forEach(row => {
+    // Feldnamen case-insensitiv mappen
+    const normalized = {};
+    Object.keys(row).forEach(k => { normalized[k.toLowerCase()] = row[k]; });
+
+    const ags = String(normalized['ags'] || '').trim();
+    const name = String(normalized['name'] || '').trim();
+    const anbieter = String(normalized['anbieter'] || '').trim();
+    const farbe = String(normalized['farbe'] || '#888888').trim();
+
+    if (!ags || !anbieter) return; // Ungültige Zeile überspringen
+
+    // Farbe pro Anbieter: erster Wert gewinnt
+    if (!colorByProvider[anbieter]) {
+      colorByProvider[anbieter] = farbe;
+    }
+
+    providerMap[ags] = {
+      name: name || ags,
+      anbieter,
+      farbe: colorByProvider[anbieter], // konsistente Farbe verwenden
+    };
+  });
+}
+
+// ============================================================
+// KARTE NEU EINFÄRBEN
+// ============================================================
+function colorizeMap() {
+  if (!geoLayer) return;
+
+  geoLayer.eachLayer(layer => {
+    const ags = getAGS(layer.feature);
+    const entry = providerMap[ags];
+    const fillColor = entry ? entry.farbe : DEFAULT_COLOR;
+
+    layer.setStyle({ fillColor, fillOpacity: 0.75, weight: 0.8, color: '#ffffff' });
+
+    // Tooltip & Popup aktualisieren
+    const p = layer.feature.properties;
+    const name = p.NAME_3 || p.GEN || p.name || p.NAME || 'Unbekannt';
+    layer.setPopupContent(buildPopup(name, ags, entry));
+  });
+}
+
+// ============================================================
+// LEGENDE AUFBAUEN
+// ============================================================
+function buildLegend() {
+  // Alte Legende entfernen
+  if (legendControl) map.removeControl(legendControl);
+
+  legendControl = L.control({ position: 'bottomright' });
+
+  legendControl.onAdd = () => {
+    const div = L.DomUtil.create('div', 'map-legend');
+
+    const items = Object.entries(colorByProvider)
+      .map(([name, color]) => legendItem(color, name))
+      .join('');
+
+    div.innerHTML = `
+      <h4>Anbieter</h4>
+      ${items}
+      ${legendItem(DEFAULT_COLOR, 'Kein Anbieter')}
+    `;
+    return div;
+  };
+
+  legendControl.addTo(map);
+}
+
+function legendItem(color, label) {
+  return `<div class="legend-item">
+    <div class="legend-color" style="background:${color}"></div>
+    <span>${label}</span>
+  </div>`;
+}
+
+// ============================================================
+// STATISTIKEN AKTUALISIEREN
+// ============================================================
+function updateStats() {
+  const counts = {};
+
+  // Anbieter-Zähler
+  Object.values(providerMap).forEach(({ anbieter }) => {
+    counts[anbieter] = (counts[anbieter] || 0) + 1;
+  });
+
+  // Kreise ohne Anbieter
+  const totalFeatures = geoData ? geoData.features.length : 0;
+  const assignedCount = Object.keys(providerMap).length;
+  const unassigned = Math.max(0, totalFeatures - assignedCount);
+
+  const list = document.getElementById('stats-list');
+
+  const providerItems = Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, count]) => {
+      const color = colorByProvider[name] || DEFAULT_COLOR;
+      return `<li>
+        <div class="stat-dot" style="background:${color}"></div>
+        <span>${name}</span>
+        <span class="stat-count">${count}</span>
+      </li>`;
+    }).join('');
+
+  list.innerHTML = `
+    ${providerItems}
+    <li>
+      <div class="stat-dot" style="background:${DEFAULT_COLOR}"></div>
+      <span style="color:var(--text-muted)">Kein Anbieter</span>
+      <span class="stat-count">${unassigned}</span>
+    </li>
+  `;
+}
+
+// ============================================================
+// SUCHE
+// ============================================================
+function searchGemeinde(query) {
+  const resultsDiv = document.getElementById('search-results');
+
+  if (!query.trim() || !geoData) {
+    resultsDiv.style.display = 'none';
+    return;
+  }
+
+  const q = query.trim().toLowerCase();
+  const matches = [];
+
+  geoData.features.forEach(feature => {
+    const p = feature.properties;
+    const name = (p.GEN || p.name || p.NAME || '').toLowerCase();
+    const ags = getAGS(feature);
+
+    if (name.includes(q) || ags.includes(q)) {
+      matches.push({ feature, name: p.NAME_3 || p.GEN || p.name || p.NAME || ags, ags });
+    }
+  });
+
+  if (!matches.length) {
+    resultsDiv.style.display = 'block';
+    resultsDiv.innerHTML = '<div class="search-result-item" style="color:var(--text-muted)">Keine Treffer gefunden.</div>';
+    return;
+  }
+
+  // Maximal 8 Ergebnisse anzeigen
+  const displayed = matches.slice(0, 8);
+  resultsDiv.style.display = 'block';
+  resultsDiv.innerHTML = displayed.map(({ feature, name, ags }) => `
+    <div class="search-result-item" data-ags="${ags}">
+      ${name}<span class="ags-badge">${ags}</span>
+    </div>
+  `).join('');
+
+  // Klick-Handler
+  resultsDiv.querySelectorAll('.search-result-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const targetAGS = el.dataset.ags;
+      zoomToFeature(targetAGS);
+      resultsDiv.style.display = 'none';
+      document.getElementById('search-input').value = el.firstChild.textContent.trim();
+    });
+  });
+}
+
+// ============================================================
+// ZOOM AUF FEATURE
+// ============================================================
+function zoomToFeature(ags) {
+  if (!geoLayer) return;
+
+  geoLayer.eachLayer(layer => {
+    if (getAGS(layer.feature) === ags) {
+      const bounds = layer.getBounds();
+      map.fitBounds(bounds, { padding: [40, 40] });
+      layer.openPopup();
+    }
+  });
+}
+
+// ============================================================
+// PNG EXPORT
+// ============================================================
+function exportPNG() {
+  const mapEl = document.getElementById('map-container');
+  html2canvas(mapEl, { useCORS: true, scale: 2 }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = `vertriebskarte_${new Date().toISOString().slice(0,10)}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }).catch(err => {
+    alert('Export fehlgeschlagen: ' + err.message);
+  });
+}
+
+// ============================================================
+// EVENT LISTENER
+// ============================================================
+
+// Suche
+document.getElementById('search-input').addEventListener('input', e => {
+  searchGemeinde(e.target.value);
+});
+
+// Suche schließen bei Klick außerhalb
+document.addEventListener('click', e => {
+  if (!e.target.closest('#search-input') && !e.target.closest('#search-results')) {
+    document.getElementById('search-results').style.display = 'none';
+  }
+});
+
+// Export
+document.getElementById('btn-export').addEventListener('click', exportPNG);
+
+// ============================================================
+// APP STARTEN
+// ============================================================
+initMap();
+loadGeoJSON();
+</script>
+</body>
+</html>
